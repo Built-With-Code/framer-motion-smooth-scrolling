@@ -44,24 +44,25 @@ const SmoothScroll: React.FC<{ children: React.ReactNode }> = ({
     restDelta: 0.001,
   });
 
-  const y = useTransform(smoothProgress, (value) => {
-    return value * -(contentHeight - windowHeight);
-  });
-
   // Turn on transform only once page has loaded, to prevent spring jumping on initial load
   useMotionValueEvent(smoothProgress, "change", (latest) => {
+    console.log(latest);
     if (latest === 0) {
       setIsLoading(false);
     }
+  });
+
+  const y = useTransform(smoothProgress, (value) => {
+    return value * -(contentHeight - windowHeight);
   });
 
   return (
     <>
       <div style={{ height: contentHeight }} />
       <motion.div
-        className="w-screen fixed top-0 flex flex-col"
+        className="w-screen fixed top-0 flex flex-col transition-opacity duration-200 ease-in-out"
         ref={contentRef}
-        style={{ y: isLoading ? 0 : y }}
+        style={{ y: isLoading ? 0 : y, opacity: isLoading ? 0 : 1 }}
       >
         {children}
       </motion.div>
